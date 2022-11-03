@@ -26,6 +26,9 @@ public class VideoEventConsumer implements StreamListener<String, ObjectRecord<S
     @SneakyThrows
     public void onMessage(ObjectRecord<String, String> record) {
         log.info(InetAddress.getLocalHost().getHostName() + " - consumed :" + record.getValue());
+        System.out.println(record.getValue());
+        this.redisTemplate
+                .opsForZSet().incrementScore(record.getValue(),record.getValue(),1);
 
         atomicInteger.incrementAndGet();
     }
