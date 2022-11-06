@@ -14,14 +14,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
-public class VideoEventConsumer implements StreamListener<String, ObjectRecord<String, String>> {
+public class VideoEventConsumer  {
 
     private AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @Autowired
     private MessageProcessService messageProcessService;
 
-    @Override
+
     @SneakyThrows
     public void onMessage(ObjectRecord<String, String> record) {
         log.info(InetAddress.getLocalHost().getHostName() + " - consumed :" + record.getValue());

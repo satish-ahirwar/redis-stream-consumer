@@ -13,7 +13,6 @@ import javax.swing.*;
 @Slf4j
 public class MessageProcessService {
 
-    @Async
     @SneakyThrows
     public void process(String message, RecordId recordId) {
         log.info("Start process" + recordId);
