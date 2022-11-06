@@ -1,6 +1,7 @@
 
 package com.sample.redis.config;
 
+import com.sample.redis.consumer.VideoEventConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +27,7 @@ public class RedisConfig {
     private String streamKey;
 
     @Autowired
-    private StreamListener<String, ObjectRecord<String, String>> streamListener;
+    private VideoEventConsumer streamListener;
 
 
     @Bean
@@ -39,11 +40,13 @@ public class RedisConfig {
                 .build();
         StreamMessageListenerContainer<String, ObjectRecord<String, String>> listenerContainer = StreamMessageListenerContainer
                 .create(redisConnectionFactory, options);
-        Subscription subscription = listenerContainer.receive(
+        /*Subscription subscription = listenerContainer.receive(
                 Consumer.from(streamKey, InetAddress.getLocalHost()
                         .getHostName()),
                 StreamOffset.create(streamKey, ReadOffset.lastConsumed()),
-                streamListener);
+                streamListener);*/
+        Subscription subscription = listenerContainer.receiveAutoAck(Consumer.from(streamKey, InetAddress.getLocalHost()
+                .getHostName()), StreamOffset.create(streamKey, ReadOffset.lastConsumed()), streamListener);
         listenerContainer.start();
         return subscription;
     }

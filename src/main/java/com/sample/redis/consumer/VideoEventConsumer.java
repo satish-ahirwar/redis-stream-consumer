@@ -2,10 +2,7 @@ package com.sample.redis.consumer;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.stream.ObjectRecord;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,17 +16,11 @@ public class VideoEventConsumer implements StreamListener<String, ObjectRecord<S
 
     private AtomicInteger atomicInteger = new AtomicInteger(0);
 
-    @Autowired
-    private ReactiveRedisTemplate<String, String> redisTemplate;
-
     @Override
     @SneakyThrows
     public void onMessage(ObjectRecord<String, String> record) {
         log.info(InetAddress.getLocalHost().getHostName() + " - consumed :" + record.getValue());
-        System.out.println(record.getValue());
-        this.redisTemplate
-                .opsForZSet().incrementScore(record.getValue(),record.getValue(),1);
-
+        System.out.println("message::"+record.getId());
         atomicInteger.incrementAndGet();
     }
 
