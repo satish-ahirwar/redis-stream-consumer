@@ -17,7 +17,7 @@ public class MessageProcessService {
     @SneakyThrows
     public void process(String message, RecordId recordId) {
         log.info("Start process" + recordId);
-        Thread.sleep(500L);
+        Thread.sleep(5000L);
         log.info("End process" + recordId);
     }
 }

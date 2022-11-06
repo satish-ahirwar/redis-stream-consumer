@@ -19,16 +19,16 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.Duration;
 
-
 @Configuration
 public class RedisConfig {
 
     @Value("${stream.key:video-streams}")
     private String streamKey;
 
+    @Value("${stream.consumer.group:video-streams-consumer-group}")
+    private String streamConsumerGroup;
     @Autowired
     private VideoEventConsumer streamListener;
-
 
     @Bean
     public Subscription subscription(RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
@@ -45,7 +45,7 @@ public class RedisConfig {
                         .getHostName()),
                 StreamOffset.create(streamKey, ReadOffset.lastConsumed()),
                 streamListener);*/
-        Subscription subscription = listenerContainer.receiveAutoAck(Consumer.from(streamKey, InetAddress.getLocalHost()
+        Subscription subscription = listenerContainer.receiveAutoAck(Consumer.from(streamConsumerGroup, InetAddress.getLocalHost()
                 .getHostName()), StreamOffset.create(streamKey, ReadOffset.lastConsumed()), streamListener);
         listenerContainer.start();
         return subscription;
